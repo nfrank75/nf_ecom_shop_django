@@ -5,14 +5,15 @@ from rest_framework.response import Response
 
 from .serializers import ProductSerializer
 from .models import Product
+from .filters import ProductsFilter
 
 
 @api_view(['GET'])
 def get_products(request):
 
-    products = Product.objects.all()
+    filterset = ProductsFilter(request.GET, queryset=Product.objects.all().order_by('id'))
     
-    serializer = ProductSerializer(products, many=True)
+    serializer = ProductSerializer(filterset.qs, many=True)
 
     return Response({
         'products': serializer.data
