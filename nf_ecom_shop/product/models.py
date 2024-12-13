@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 
 
 class Category(models.TextChoices):
+    PHONES = 'TELEPHONES'
     ELECTRONICS = 'Electronics'
     LAPTOPS = 'Latops'
     ARTS = 'Arts'
