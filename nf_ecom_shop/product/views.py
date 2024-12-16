@@ -35,7 +35,7 @@ def get_products(request):
         })
 
 @api_view(['GET'])
-def get_product(request, pkk):
+def get_product(request, pk):
 
     product = get_object_or_404(Product, id=pk)
     
