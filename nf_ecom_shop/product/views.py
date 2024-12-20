@@ -1,6 +1,7 @@
 from django.shortcuts import get_object_or_404, render
 
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions  import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
 from rest_framework import status
@@ -48,9 +49,15 @@ def get_product(request, pk):
 
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def upload_product_images(request):
 
     data = request.data
+
+    if product.user != request.user:
+        return Response({'error': 'You can not upload the product images'}, status=status.HTTP_403_FORBIDDEN)
+
+
     files = request.FILES.getlist('images')
 
     images = []
@@ -66,15 +73,20 @@ def upload_product_images(request):
     return Response(serializer.data)
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def new_product(request):
 
     data = request.data
+
+    if product.user != request.user:
+        return Response({'error': 'You can not create this product'}, status=status.HTTP_403_FORBIDDEN)
+
 
     serializer = ProductSerializer(data=data)
 
     if serializer.is_valid():
 
-        product = Product.objects.create(**data)
+        product = Product.objects.create(**data, user=request.user)
         
         res = ProductSerializer(product, many=False)
 
@@ -85,13 +97,15 @@ def new_product(request):
 
 
 @api_view(['PUT'])
+@permission_classes([IsAuthenticated])
 def update_product(request, pk):
 
     data = request.data
 
     product = get_object_or_404(Product, id=pk)
 
-    # check if the user is same - TODO
+    if product.user != request.user:
+        return Response({'error': 'You can not update this product'}, status=status.HTTP_403_FORBIDDEN)
 
     product.name = data['name']
     product.description = data['description']
@@ -109,11 +123,14 @@ def update_product(request, pk):
 
 
 @api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
 def delete_product(request, pk):
 
     product = get_object_or_404(Product, id=pk)
 
-    # check if the user is same - TODO
+    if product.user != request.user:
+        return Response({'error': 'You can not delete this product'}, status=status.HTTP_403_FORBIDDEN)
+
 
     args = {"product": pk}
     images = ProductImages.objects.filter(**args)
