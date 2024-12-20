@@ -113,6 +113,11 @@ def delete_product(request, pk):
 
     # check if the user is same - TODO
 
+    args = {"product": pk}
+    images = ProductImages.objects.filter(**args)
+    for i in images:
+        i.delete()
+
     product.delete()
 
 
