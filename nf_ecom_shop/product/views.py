@@ -63,3 +63,22 @@ def upload_product_images(request):
     print('data', data)
 
     return Response(serializer.data)
+
+@api_view(['POST'])
+def new_product(request):
+
+    data = request.data
+
+    serializer = ProductSerializer(data=data)
+
+    if serializer.is_valid():
+
+        product = Product.objects.create(**data)
+        
+        res = ProductSerializer(product, many=False)
+
+        return Response({ 'product': serializer.data })
+
+    else:
+        return Response(serializer.errors)
+    
