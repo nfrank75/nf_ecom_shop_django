@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Product
+from .models import Product, ProductImages
 
 admin.site.site_header = "E-Commerce Rest API"
 admin.site.site_title = "E-commerce Rest API"
@@ -20,3 +20,4 @@ class ProductAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Product, ProductAdmin)
+admin.site.register(ProductImages)

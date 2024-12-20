@@ -5,8 +5,8 @@ from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
 
 
-from .serializers import ProductSerializer
-from .models import Product
+from .serializers import ProductSerializer, ProductImagesSerializer
+from .models import Product, ProductImages
 from .filters import ProductsFilter
 
 
@@ -44,3 +44,22 @@ def get_product(request, pk):
     return Response({
         'product': serializer.data
         })
+
+
+@api_view(['POST'])
+def upload_product_images(request):
+
+    data = request.data
+    files = request.FILES.getlist('images')
+
+    images = []
+    for f in files:
+        image = ProductImages.objects.create(product=Product(data['product']), image=f)
+        images.append(image)
+    
+    serializer = ProductImagesSerializer(images, many=True)
+
+    print('serializer', serializer.data)
+    print('data', data)
+
+    return Response(serializer.data)
