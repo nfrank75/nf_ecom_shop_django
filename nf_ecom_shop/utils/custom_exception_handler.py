@@ -6,7 +6,6 @@ from http import HTTPStatus
 def custom_exception_handler(exc, context):
 
     response = exception_handler(exc, context)
-    print('response', response)
 
     if response is not None:
 
