@@ -13,7 +13,7 @@ class SignUpSerializer(serializers.ModelSerializer):
             'first_name': {'required': True, "allow_blank": False},
             'last_name': {'required': True, "allow_blank": False},
             'email': {'required': True, "allow_blank": False},
-            'password': {'required': True, "allow_blank": False, 'min_lenght': 6},
+            'password': {'required': True, "allow_blank": False},
         }
 
 

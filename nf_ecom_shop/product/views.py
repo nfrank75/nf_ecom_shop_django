@@ -87,17 +87,19 @@ def new_product(request):
 @api_view(['PUT'])
 def update_product(request, pk):
 
+    data = request.data
+
     product = get_object_or_404(Product, id=pk)
 
     # check if the user is same - TODO
 
-    product.name = request.data['name']
-    product.description = request.data['description']
-    product.price = request.data['price']
-    product.category = request.data['category']
-    product.brand = request.data['brand']
-    product.ratings = request.data['ratings']
-    product.stock = request.data['stock']
+    product.name = data['name']
+    product.description = data['description']
+    product.price = data['price']
+    product.category = data['category']
+    product.brand = data['brand']
+    product.ratings = data['ratings']
+    product.stock = data['stock']
 
     product.save()
 
