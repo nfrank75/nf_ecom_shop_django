@@ -77,11 +77,7 @@ def upload_product_images(request):
 def new_product(request):
 
     data = request.data
-
-    if product.user != request.user:
-        return Response({'error': 'You can not create this product'}, status=status.HTTP_403_FORBIDDEN)
-
-
+    
     serializer = ProductSerializer(data=data)
 
     if serializer.is_valid():

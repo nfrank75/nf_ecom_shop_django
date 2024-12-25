@@ -28,11 +28,11 @@ from drf_yasg import openapi
 
 schema_view = get_schema_view(
    openapi.Info(
-      title="Mon API",
+      title="DJANGO REST FRAMEWORK API ECOMMERCE",
       default_version='v1',
-      description="Documentation de mon API",
+      description="Documentation of DJANGO REST FRAMEWORK API ECOMMERCE",
       terms_of_service="https://www.google.com/policies/terms/",
-      contact=openapi.Contact(email="contact@monapi.local"),
+      contact=openapi.Contact(email="frank.a.ngaleu@mgmail.com"),
       license=openapi.License(name="BSD License"),
    ),
    public=True,
@@ -43,8 +43,8 @@ schema_view = get_schema_view(
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include('product.urls')),
-    path('api/', include('account.urls')),
+    path('api/products/', include('product.urls')),
+    path('api/account/', include('account.urls')),
     path('api/token/', TokenObtainPairView.as_view()),
 
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
