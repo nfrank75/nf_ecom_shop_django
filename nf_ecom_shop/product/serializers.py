@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Product, ProductImages
+from .models import Product, ProductImages, Review
 
 
     
@@ -18,14 +18,18 @@ class ProductSerializer(serializers.ModelSerializer):
         model = Product
         fields = ('id', 'name', 'description', 'price', 'brand', 'category', 'ratings', 'stock', 'user', 'images')
 
-        # extra_kwargs = {
-        #     "name": { "required": True, "allow_blank": False},
-        #     "description": { "required": True, "allow_blank": False},
-        #     "price": { "required": True, "allow_blank": False},
-        #     "brand": { "required": True, "allow_blank": False},
-        #     "brand": { "required": True, "allow_blank": False},
-        #     "category": { "required": True, "allow_blank": False},
-        #     "category": { "required": True, "allow_blank": False},
-        #     "stock": { "required": True, "allow_blank": False},
-        #     }
+        extra_kwargs = {
+            "name": { "required": True, },
+            "description": { "required": True,},
+            "price": { "required": True,},
+            "brand": { "required": True,},
+            "category": { "required": True, "allow_blank": False},
+            "stock": { "required": True,},
+            }
+
+class ReviewSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Review
+        fields = "__all__"
 

@@ -7,9 +7,10 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework import status
 
 
-from .serializers import ProductSerializer, ProductImagesSerializer
-from .models import Product, ProductImages
+from .serializers import ProductSerializer, ProductImagesSerializer, ReviewSerializer
+from .models import Product, ProductImages, Review
 from .filters import ProductsFilter
+from django.db.models import Avg
 
 
 @api_view(['GET'])
@@ -49,28 +50,20 @@ def get_product(request, pk):
 
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
 def upload_product_images(request):
 
-    data = request.data
-
-    if product.user != request.user:
-        return Response({'error': 'You can not upload the product images'}, status=status.HTTP_403_FORBIDDEN)
-
-
+    data=request.data
     files = request.FILES.getlist('images')
 
-    images = []
+    images= []
     for f in files:
         image = ProductImages.objects.create(product=Product(data['product']), image=f)
         images.append(image)
-    
+
     serializer = ProductImagesSerializer(images, many=True)
 
-    print('serializer', serializer.data)
-    print('data', data)
-
     return Response(serializer.data)
+
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -137,3 +130,52 @@ def delete_product(request, pk):
 
 
     return Response({'details': 'Product is deleted successfully!'}, status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def create_review(request, pk):
+
+    user = request.user
+
+    product = get_object_or_404(Product, id=pk)
+
+    print('product', product)
+
+    data = request.data
+
+    print('data', data)
+
+    review = product.reviews.filter(user=user)
+
+    print('review', review)
+
+    if int(data['rating']) <= 0 or int(data['rating']) > 5:
+        
+        return Response({ 'error': 'Please select rating between 1-5'}, status=status.HTTP_400_BAD_REQUEST) 
+
+    elif review.exists():
+
+        new_review = { 'rating': data['rating'], 'comment': data['comment'] }
+        review.update(**new_review)
+
+        rating = product.reviews.aggregate(avg_ratings=Avg('rating'))
+
+        product.ratings = rating['avg_ratings']
+        product.save()
+
+        return Response({ 'detail': 'Review updated successfully!' })
+
+    else:
+        Review.objects.create(
+            user=user,
+            product=product,
+            rating=data['rating'],
+            comment=data['comment']
+        )
+        rating = product.reviews.aggregate(avg_ratings=Avg('rating'))
+
+        product.ratings = rating['avg_ratings']
+        product.save()
+        
+        return Response({ 'detail': 'Review posted successfully!' })

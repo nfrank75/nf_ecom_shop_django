@@ -2,7 +2,6 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.dispatch import receiver
 from django.db.models.signals import post_delete
-    
 
 
 
@@ -38,12 +37,31 @@ class Product(models.Model):
 class ProductImages(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True, related_name='images')
     image = models.ImageField(upload_to='products')
+    createdAt = models.DateTimeField(auto_now_add = True)
+
+    def __str__(self):
+        return self.product.name
+    
 
 
 @receiver(post_delete, sender = ProductImages)
 def auto_delete_file_on_delete(sender, instance, **kwargs):
     if instance.image:
         instance.image.delete(save=False)
+
+
+class Review(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True, related_name='reviews')
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    rating = models.IntegerField(default=0)
+    comment = models.TextField(blank=True)
+    createdAt = models.DateTimeField(auto_now_add = True)
+
+    def __str__(self):
+        return str(self.product.name) + '' + str(self.comment)
+    
+    
+    
 
         
     
