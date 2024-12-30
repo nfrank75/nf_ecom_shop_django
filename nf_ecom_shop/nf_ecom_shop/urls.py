@@ -28,7 +28,7 @@ from drf_yasg import openapi
 
 schema_view = get_schema_view(
    openapi.Info(
-      title="DJANGO REST FRAMEWORK API ECOMMERCE",
+      title="E-COMMERCE - DJANGO REST FRAMEWORK API",
       default_version='v1',
       description="Documentation of DJANGO REST FRAMEWORK API ECOMMERCE",
       terms_of_service="https://www.google.com/policies/terms/",
@@ -45,6 +45,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/products/', include('product.urls')),
     path('api/account/', include('account.urls')),
+    path('api/orders/', include('order.urls')),
     path('api/token/', TokenObtainPairView.as_view()),
 
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),

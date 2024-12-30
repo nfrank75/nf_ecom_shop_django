@@ -16,6 +16,7 @@ class ProductAdmin(admin.ModelAdmin):
         'stock',
         'user',
         'is_active',
+        'createdAt'
         )
 
 class ReviewAdmin(admin.ModelAdmin):
@@ -24,9 +25,17 @@ class ReviewAdmin(admin.ModelAdmin):
         'rating',
         'comment',
         'user',
+        "createdAt"
+        )
+
+class ProductImagesAdmin(admin.ModelAdmin):
+    list_display = (
+        'product',
+        'image',
+        'createdAt'
         )
 
 
 admin.site.register(Product, ProductAdmin)
 admin.site.register(Review, ReviewAdmin)
-admin.site.register(ProductImages)
+admin.site.register(ProductImages, ProductImagesAdmin)

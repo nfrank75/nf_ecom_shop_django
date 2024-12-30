@@ -4,7 +4,6 @@ from django.dispatch import receiver
 from django.db.models.signals import post_delete
 
 
-
 class Category(models.TextChoices):
     PHONES = 'Telephones'
     ELECTRONICS = 'Electronics'
@@ -13,7 +12,6 @@ class Category(models.TextChoices):
     FOOD = 'Food'
     HOME = 'Home'
     KITCHEN = 'Kitchen'
-
 
 class Product(models.Model):
     name=models.CharField(max_length=200, default="", blank=False)
@@ -32,6 +30,8 @@ class Product(models.Model):
 
     class Meta:
         ordering = ('-createdAt',)
+        verbose_name = "Product"
+        verbose_name_plural = "Products"
 
 
 class ProductImages(models.Model):
@@ -39,9 +39,13 @@ class ProductImages(models.Model):
     image = models.ImageField(upload_to='products')
     createdAt = models.DateTimeField(auto_now_add = True)
 
+    class Meta:
+        ordering = ('-createdAt',)
+        verbose_name = "Product Image"
+        verbose_name_plural = "Product Images"
+
     def __str__(self):
         return self.product.name
-    
 
 
 @receiver(post_delete, sender = ProductImages)
@@ -56,6 +60,12 @@ class Review(models.Model):
     rating = models.IntegerField(default=0)
     comment = models.TextField(blank=True)
     createdAt = models.DateTimeField(auto_now_add = True)
+
+    
+    class Meta:
+        ordering = ('-createdAt',)
+        verbose_name = "Review"
+        verbose_name_plural = "Reviews"
 
     def __str__(self):
         return str(self.product.name) + '' + str(self.comment)
