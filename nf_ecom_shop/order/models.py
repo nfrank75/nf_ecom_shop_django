@@ -43,6 +43,8 @@ class Order(models.Model):
 
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
 
+    image = models.CharField(max_length=500, default="", blank=False)
+    
     createdAt = models.DateTimeField(auto_now_add = True)
 
     is_active = models.BooleanField(default=True)
