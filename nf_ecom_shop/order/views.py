@@ -8,6 +8,11 @@ from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
 from rest_framework import status
 
+import os
+from decouple import config
+
+import stripe
+ 
 from .filters import OrderFilter
 
 from .models import Order, OrderItem
@@ -16,6 +21,7 @@ from product.models import Product
 
 from .serializers import OrderSerializer, OrderItemSerializer
 
+from utils.helpers import get_current_host
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -137,4 +143,7 @@ def delete_order(request, pk):
         return Response({ 'detail': 'Order not found!' })
         
 
-        
+stripe.api_key = config('STRIPE_PRIVATE_KEY')     
+# YOUR_DOMAIN = 'http://127.0.0.1:8000'
+# YOUR_DOMAIN = get_current_host()
+ 
